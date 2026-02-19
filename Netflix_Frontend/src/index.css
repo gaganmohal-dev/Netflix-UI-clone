@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+@theme {
+  --color-netflix-black: #141414;
+  --color-netflix-red: #E50914;
+  --color-netflix-gray: #2f2f2f;
+  --color-netflix-light-gray: #b3b3b3;
+
+  --text-small: 1.1rem;
+}
+
+body{
+  background-color: var(--color-netflix-black);
+}
