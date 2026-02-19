@@ -25,21 +25,6 @@ This project focuses on building a clean, scalable, and production-style UI whil
 
 ---
 
-## 📂 Project Structure
-
-src/
-│
-├── components/
-│   ├── Navbar.jsx
-│   ├── Sidebar.jsx
-│
-├── pages/
-│
-├── assets/
-│
-└── App.jsx
-
----
 
 ## 🎯 Project Goal
 
@@ -91,3 +76,4 @@ npm run dev
 ## 📌 Status
 
 🚧 Work in Progress
+
