@@ -6,7 +6,7 @@ function Navbar({setIsSidebarOpen}){
     }
     return(
     <>
-        <div className=" px-4 py-8 flex justify-between">
+        <div className="fixed z-20 top-0 left-0 w-full px-4 py-8 flex justify-between ">
                 
             <div className="flex gap-8 text-small ">
                 <div className="flex justify-center items-center">
