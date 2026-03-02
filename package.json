@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "tailwindcss-safe-area": "^1.3.0"
+  }
+}
