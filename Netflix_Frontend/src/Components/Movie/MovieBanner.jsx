@@ -87,18 +87,18 @@ function MovieBanner(){
        
 
         {Movies.length > 0 && (   
-            <div className=" md:w-1/2 md:h-full h-[70vh] w-auto flex flex-col gap-6  md:justify-center  z-20">
+            <div className=" md:w-1/2 md:h-full px-8 h-[70vh] w-auto flex flex-col gap-6 justify-center  z-20">
                 <div className="leading-none font-semibold text-[clamp(2rem,12vw,5rem)] hidden md:block ">    
-                    <h1 className="text-white  text-center " >{Movies[currentIndex].title}</h1>
+                    <h1 className="text-white " >{Movies[currentIndex].title}</h1>
                 </div>
 
-                <div className=" justify-center hidden  md:flex ">
+                <div className="  hidden  md:flex ">
                     <p className="text-white max-w-[90%]  text-[clamp(1rem,1vw,2rem)] font-semibold">
                         {Movies[currentIndex].overview}
                     </p>
                 </div>
              
-                <div className=" w-full hidden md:flex gap-3 justify-center ">
+                <div className=" w-full hidden md:flex gap-3  ">
                     <button className="py-3 px-10 md:py-4 m bg-white text-small font-bold flex gap-2 cursor-pointer items-center">
                         <img src="/images/Vector.svg" alt="" className="w-3.5"/>
                         <p>Play</p>
