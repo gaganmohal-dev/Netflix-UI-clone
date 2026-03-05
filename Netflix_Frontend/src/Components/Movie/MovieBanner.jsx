@@ -1,7 +1,7 @@
 import { CloudCog } from "lucide-react";
 import { useEffect, useState } from "react";
-
-
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 function MovieBanner(){
    const apiKey = import.meta.env.VITE_TMDB_KEY;
    const [Movies, setMovies] = useState([]); 
@@ -30,8 +30,15 @@ function MovieBanner(){
                     return () => clearInterval(interval);
                 
             }, [Movies.length])
-            
-    
+      
+            // study this properly the logic
+    const handleClick = (event) => {
+        if(event.currentTarget.id == "leftClick"){
+            setIndex(currentIndex => (currentIndex - 1) % Movies.length)
+        }else{
+            setIndex(currentIndex => (currentIndex + 1) % Movies.length)
+        }
+    }
    return(
         <>    
         <div className="relative h-[80vh]  md:h-dvh w-full  flex justify-center  md:justify-start  ">
@@ -73,43 +80,81 @@ function MovieBanner(){
                             https://image.tmdb.org/t/p/original/${movie.poster_path}
                             )`}}
                      >   
-                    <div className="flex flex-col gap-3"> 
-                     <div className="h-18 w-18 rounded-full bg-gray-600/80">
+                    <div className="w-full h-1/2 flex flex-col  ">
+                    <div className="w-full h-full flex justify-between items-start px-2 ">
+                        <button className=" bg-gray-400 opacity-80 rounded-full"
+                           id="leftClick"
+                           onClick={handleClick}
+                        >
+                            <NavigateBeforeIcon sx={{ fontSize: 40 }} className="text-white"/>
+                        </button>
+                        <button className="bg-gray-400 opacity-80 rounded-full"
+                            id="rightClick"
+                            onClick={handleClick}
+                        >
+                          <NavigateNextIcon sx={{ fontSize: 40 }} className="text-white"/>
+                        </button>
+                    </div>
+                     <div className=" flex flex-col w-full  items-end gap-3  justify-end"> 
+                     <div className="h-15 w-15 rounded-full  mr-4  bg-gray-600/80">
                         <img src="/images/plus.svg" alt="Add Movie" className="flex justify-center items-center w-full h-full  invert" />
                      </div>
-                     <div className="h-18 w-18 rounded-full bg-netflix-red/75 mb-8 mr-4 flex justify-center items-center bg-clip-padding backdrop-filter backdrop-blur-sm border border-gray-100">
+                     <div className="h-15 w-15 rounded-full bg-netflix-red/75 mb-8 mr-4 flex justify-center items-center bg-clip-padding backdrop-filter backdrop-blur-sm border border-gray-100">
                             <img src="/images/play.svg" alt="playbutton" className="w-[80%] h-[60%] object-cover invert" />
                      </div>
                     </div>
+                    </div>  
+                     
                 </div>
                 ))}
   
        
 
         {Movies.length > 0 && (   
-            <div className=" md:w-1/2 md:h-full px-8 h-[70vh] w-auto flex flex-col gap-6 justify-center  z-20">
-                <div className="leading-none font-semibold text-[clamp(2rem,12vw,5rem)] hidden md:block ">    
+            <div className="hidden md:flex w-full h-full justify-between items-center  z-20">
+            <div className=" w-1/2 h-full  px-5   flex gap-6 items-center  justify-center  " key={Movies[currentIndex].id}>
+                <div >
+                     <button className=" bg-gray-400 opacity-80 rounded-full cursor-pointer"
+                           id="leftClick"
+                           onClick={handleClick}
+                        >
+                            <NavigateBeforeIcon sx={{ fontSize: 50 }} className="text-white"/>
+                        </button>
+                </div>
+                
+                <div className="flex flex-col gap-6 ">
+                <div className="leading-none font-semibold text-[clamp(2rem,12vw,5rem)]">    
                     <h1 className="text-white " >{Movies[currentIndex].title}</h1>
                 </div>
 
-                <div className="  hidden  md:flex ">
+                <div>
                     <p className="text-white max-w-[90%]  text-[clamp(1rem,1vw,2rem)] font-semibold">
                         {Movies[currentIndex].overview}
                     </p>
                 </div>
              
-                <div className=" w-full hidden md:flex gap-3  ">
-                    <button className="py-3 px-10 md:py-4 m bg-white text-small font-bold flex gap-2 cursor-pointer items-center">
+                <div className=" w-full flex  gap-3  ">
+                    <button className="py-3 px-10  bg-white text-small font-bold flex gap-2 cursor-pointer items-center">
                         <img src="/images/Vector.svg" alt="" className="w-3.5"/>
                         <p>Play</p>
                     </button>
-                    <button className="py-3 md:py-4 px-14 font-bold text-small flex gap-2 items-center cursor-pointer bg-white/30">
+                    <button className="py-3  px-14 font-bold text-small flex gap-2 items-center cursor-pointer bg-white/30">
                         <img src="/images/Detail.svg" alt="" className="w-5" />
                         <p className="text-white">Details</p>
                     </button>
+                    </div>
                 </div>
-
+                </div>
                 
+                <div className=" h-2/6 px-5  flex items-center ">
+                      <button className=" cursor-pointer bg-gray-400 opacity-80 rounded-full"
+                            id="rightClick"
+                            onClick={handleClick}
+
+                        >
+                          <NavigateNextIcon sx={{ fontSize: 50 }} className="text-white"/>
+                        </button>
+                </div>
             </div>
           )}
              
