@@ -31,7 +31,26 @@ function MovieBanner(){
                 
             }, [Movies.length])
       
-            // study this properly the logic
+        //fading the banner on scroll Down
+        const [opacity, setOpacity] = useState(1)    
+        useEffect(() => {
+
+            const handler  = () => {
+                const scrollPosition = window.scrollY;
+
+                const newOpacity = Math.max(1-scrollPosition/400, 0)
+                setOpacity(newOpacity);
+            }
+
+            window.addEventListener('scroll', handler);
+
+            return () => {window.removeEventListener('scroll', handler)}
+            
+
+        }, [])
+
+
+           
     const handleClick = (event) => {
         if(event.currentTarget.id == "leftClick"){
             setIndex(currentIndex => (currentIndex - 1) % Movies.length)
@@ -41,10 +60,9 @@ function MovieBanner(){
     }
    return(
         <>    
-        <div className="relative h-[80vh]  md:h-dvh w-full  flex justify-center  md:justify-start  ">
+        <div style={{opacity}} className="relative md:h-dvh w-full h-[70vh]   flex justify-center  md:justify-start  ">
 
-                {console.log(Movies[0])}
-           
+               
                 {Movies.map((movie,index) => (
                     <div 
                     className={`hidden md:block absolute inset-0  bg-no-repeat bg-cover  transition-opacity duration-1000 ease-in-out    ${index === currentIndex ? "opacity-100 z-10" : "opacity-0 z-0"}`}
