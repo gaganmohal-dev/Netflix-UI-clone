@@ -1,0 +1,203 @@
+import React from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import AddIcon from '@mui/icons-material/Add';
+import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
+import Row from "../Components/Movie/Row";
+import { CloudCog } from "lucide-react";
+function MoviePage(){
+    const apiKey = import.meta.env.VITE_TMDB_KEY;
+    const [movie,setMovie] = useState(null)
+    const [recommendedMovies, setRecommendedMovies] = useState([])
+    const { id } = useParams()
+    useEffect(() => {
+        try{
+            fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}`)
+            .then(response => response.json())
+            .then(data => setMovie(data))
+            
+        }catch(err){
+            console.log(err)
+        }
+    }, [id])
+
+    useEffect(() => {
+           try{
+                fetch(`https://api.themoviedb.org/3/movie/${id}/recommendations?api_key=${apiKey}`).then(res => res.json())
+                .then(data => setRecommendedMovies(data.results))
+           }catch(err){
+                console.log(err)
+           } 
+    }, [])
+            console.log(recommendedMovies)
+   
+            let releaseDate = movie?.release_date?.slice(0,4)
+            let timeOfMovie = movie ? `${Math.floor(movie.runtime / 60)}h ${movie.runtime % 60}m`: ""
+
+        const [expanded, setExpand] = useState(false)
+        
+        function handleExpand(){
+            setExpand(true)
+        }
+        
+    return(
+        <>
+
+            {movie && (
+                <>
+                {console.log(movie)}
+
+                <div className=" hidden md:block relative  w-full h-screen text-white">
+                   <img src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}  alt="Poster" className="w-full h-full"/> 
+                  
+                  
+                   <div className="absolute inset-0 bg-linear-to-r 
+                            from-black 
+                            via-black/40 
+                            to-transparent" />
+                       <div className="absolute inset-0 
+                        bg-linear-to-t 
+                        from-black from-0% 
+                        via-black/40 via-10% 
+                        to-transparent to-20%" />
+                </div>
+
+                    {/* For Mobile */}
+                <div className=" flex justify-center  md:hidden w-full h-[57vh] text-white">
+                   <img src={`https://image.tmdb.org/t/p/original${movie.poster_path}`}  alt="Poster" className="w-[95%] h-full rounded-4xl object-cover"/> 
+                </div>
+
+               
+                </>
+            )
+         }
+
+    {/* For Mobile Layout only coz the structure is gonna be different too */}
+        {movie && 
+         <div className=" md:hidden   mt-5 w-full text-lg font-semibold flex flex-col items-center ">
+            
+                <div className=" w-full h-auto text-sm text-netflix-light-gray flex justify-center gap-2"> 
+                    
+                    <span>{releaseDate} </span>    
+                    <span>•</span>
+                    <span>{timeOfMovie}</span>    
+                    <span>•</span>
+                    <span>Imdb {movie.vote_average.toFixed(1)} </span>    
+                    <span>•</span>
+                    <span>{movie.original_language}</span>    
+                </div>
+            <button className="w-[95%] rounded-2xl p-1.5 mt-2 bg-white">Watch Now</button>
+
+            <div className="mt-3 w-full h-auto text-lg text-white flex justify-center gap-3">
+                {movie && 
+                    movie.genres.map((genre,index) => (
+                     <React.Fragment key={genre.id}>
+                        <span>{genre.name}</span>
+                        <span>{index !== movie.genres.length - 1 && " | "}</span>
+                    </React.Fragment>
+                    ))
+                }
+            </div>    
+
+            <div className="w-full h-auto  flex justify-center text-netflix-light-gray  p-2 leading-none">
+                <span className="text-justify text-base leading-none" onClick={() => {setExpand(!expanded)}}>
+                    {expanded ? (
+                        <>
+                        {movie.overview}   
+                        <span className="text-white cursor-pointer  ">Show Less</span>
+                        </>
+                    )
+                         : ( 
+                         <>
+                         {movie.overview.slice(0,100) + "..."} 
+                            <span className="text-white cursor-pointer">"Read More"</span>
+                         </>
+                        )}
+                </span>
+                
+            </div>
+
+            <div className="mt-3 w-full h-full text-white flex gap-4 ">
+                <button className=" cursor-pointer p-1.5 flex flex-col items-center  ">
+                    <AddIcon fontSize="medium" />
+                    <p className="text-sm text-netflix-light-gray">watchlist</p>
+                </button>
+                <button  className="p-1.5 cursor-pointer flex flex-col items-center ">
+                 <FavoriteBorderOutlinedIcon fontSize="medium"  />
+                 <p className="text-sm text-netflix-light-gray">Rate</p>
+                </button>   
+            </div>              
+         </div>
+        }
+
+    {/* for Md-lg screens */}
+    {movie &&
+        <div className="p-5 absolute top-[50%] translate-y-[-30%] hidden md:block w-[50%] h-[50%] " >
+
+           {movie && 
+            <div className="text-7xl w-full  text-white">
+                {movie.original_title}    
+            </div>
+           }     
+       
+            <div className="w-full mt-5 text-lg font-semibold flex flex-col gap-4">
+            
+                <div className=" w-full h-auto text-lg text-white flex  gap-2"> 
+                    
+                    <span>{releaseDate} </span>    
+                    <span>•</span>
+                    <span>{timeOfMovie}</span>    
+                    <span>•</span>
+                    <span>Imdb { movie.vote_average.toFixed(1)} </span>    
+                    <span>•</span>
+                    <span>{movie.original_language}</span>    
+                </div>
+
+                <div className="w-full h-auto   flex justify-center text-netflix-light-gray  leading-none">
+                <span className="text-justify text-lg leading-none" onClick={() => {setExpand(!expanded)}}>
+                    {expanded ? (
+                        <>
+                        {movie.overview}   
+                        <span className="text-white cursor-pointer  ">Show Less</span>
+                        </>
+                    )
+                         : ( 
+                         <>
+                         {movie.overview.slice(0,200) + "..."} 
+                            <span className="text-white cursor-pointer">"Read More"</span>
+                         </>
+                        )}
+                </span>
+                </div>
+
+                 <div className="mt-3 w-full h-auto text-lg text-white flex  gap-3">
+                {movie && 
+                    movie.genres.map((genre,index) => (
+                        <>
+                          <span>{genre.name}</span> 
+                          
+                          <span>{index !== movie.genres.length - 1 && " | "}</span> 
+                        </>
+                    ))
+                }
+                </div>  
+
+                <div className="flex gap-4">
+                     <button className=" w-[60%] rounded-md p-3 mt-5 bg-white text-xl cursor-pointer transition transform hover:scale-102 duration-200 ">Watch Now</button>
+                    <button className=" w-[10%] rounded-md p-3 mt-5 bg-white cursor-pointer transition transform hover:scale-102 duration-200"><AddIcon fontSize="large" /></button>
+                </div> 
+            </div>
+        </div>
+        
+    }            
+
+        <div className="w-full h-auto mt-3 md:-mt-5 ">
+            <Row name={"More Like This"} movies={recommendedMovies}/>
+        </div>
+
+        </>
+    )
+}
+
+export default MoviePage
