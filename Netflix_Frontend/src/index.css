@@ -1,4 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 @import "tailwindcss";
+@import "tailwind-scrollbar-hide/v4";
 
 @theme {
   --color-netflix-black: #141414;
@@ -7,8 +9,18 @@
   --color-netflix-light-gray: #b3b3b3;
 
   --text-small: 1.1rem;
+  
+}
+.bebas-neue-regular {
+  font-family: "Bebas Neue", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: 0.1rem;
 }
 
 body{
-  background-color: var(--color-netflix-black);
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: black;
 }

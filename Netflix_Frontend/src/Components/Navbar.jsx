@@ -1,13 +1,27 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import SideBar from "./SideBar";
 function Navbar({setIsSidebarOpen}){
+    const [opacity, setOpacity] = useState(0);
+
+    useEffect(() => {
+        const handler = () =>{
+            const scrollPosition = window.scrollY;
+            const newOpacity = Math.min(scrollPosition/450, 1)
+            setOpacity(newOpacity)
+        }
+
+        window.addEventListener('scroll', handler)
+        
+        return () => {window.removeEventListener('scroll', handler)
+        }
+    }, [])
     const handleClick = () => {
         setIsSidebarOpen(true)
     }
     return(
     <>
-        <div className="fixed z-20 top-0 left-0 w-full px-4 py-8 flex justify-between ">
-                
+        <header style={{ backgroundColor: `rgba(27, 18, 18,${opacity})` }} className="fixed z-20  top-0 left-0 w-full  ">
+             <div className=" px-4 py-4  flex justify-between ">
             <div className="flex gap-8 text-small ">
                 <div className="flex justify-center items-center">
                     <img src="/images/NetflixLogoSvg.svg" className=" h-7 md:h-8.5" /> 
@@ -39,9 +53,9 @@ function Navbar({setIsSidebarOpen}){
                     <img src="/images/profile.svg" alt="search" className="h-6" onClick={handleClick} />
                 </div> 
             
-
+            </div>
             
-        </div>
+        </header>
     </>
     )    
 }
