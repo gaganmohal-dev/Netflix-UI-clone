@@ -1,10 +1,7 @@
 import { useState, useEffect } from "react";
-import Navbar from "../Components/Navbar"
-import SideBar from "../Components/SideBar"
 import MovieBanner from "../Components/Movie/MovieBanner"
 import Row from "../Components/Movie/Row";
 import movieCategories from "../Data/RowsData.js"
-import Footer from "../Components/Footer.jsx";
 function HomePage(){
 
     const apiKey = import.meta.env.VITE_TMDB_KEY;
@@ -22,7 +19,7 @@ function HomePage(){
                     responses.map(res => res.json())
                 )
                
-                const finalData = {}
+                const finalData = {} //{key:value}
                 data.forEach((item,index) => {
                     const key = movieCategories[index].key
                     finalData[key] = item.results
@@ -38,17 +35,16 @@ function HomePage(){
          fetchData()
      }, [movieCategories])
 
-     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+   
     return(
         <>
         {/*calling Movie banner  */}
             
 
         {/* Navbar */}
-        <header>
-            <Navbar setIsSidebarOpen={setIsSidebarOpen} isSidebarOpen = {isSidebarOpen} />
+      
             <MovieBanner />
-        </header>
+      
        
         {/* Rows */}
         <section>
@@ -65,20 +61,10 @@ function HomePage(){
             
         
 
-        {/* Sidebar */}
-           {isSidebarOpen && (
-                <div
-                onClick={() => setIsSidebarOpen(false)}
-                className="fixed inset-0 bg-black/40 z-40"
-                />
-             )}
-            <SideBar 
-                isSidebarOpen = {isSidebarOpen}
-            />
+       
 
-             {/*Footer */}
              
-                <Footer />
+               
            
                
 

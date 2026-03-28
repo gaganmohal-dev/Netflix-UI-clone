@@ -19,7 +19,8 @@ function Row({name, movies}){
             let scrollWidth = row.scrollWidth;
 
             setLeftBtn(scrollLeft > 0)
-            setRightBtn(scrollLeft + clientWidth < scrollWidth )    //false baar baar
+            const isAtEnd = scrollLeft + clientWidth >= scrollWidth - 1;
+            setRightBtn(!isAtEnd);  
          }
          
          handleScroll()
@@ -29,7 +30,7 @@ function Row({name, movies}){
          return () => {
              row.removeEventListener('scroll', handleScroll)
             }
-    },[])
+    },[movies])
     
     let scrollBackward = () =>{
         rowRef.current.scrollBy({left:-rowRef.current.offsetWidth, behavior:"smooth"})
