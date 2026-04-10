@@ -1,16 +1,18 @@
 import React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import AddIcon from '@mui/icons-material/Add';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
 import Row from "../Components/Movie/Row";
-import { CloudCog } from "lucide-react";
+import { watchListContext } from "../Contexts/watchListContext";
+import CheckIcon from '@mui/icons-material/Check';
 function MoviePage(){
     const apiKey = import.meta.env.VITE_TMDB_KEY;
     const [movie,setMovie] = useState(null)
     const [recommendedMovies, setRecommendedMovies] = useState([])
     const { id } = useParams()
+   
     useEffect(() => {
         try{
             fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}`)
@@ -37,10 +39,24 @@ function MoviePage(){
 
         const [expanded, setExpand] = useState(false)
         
-        function handleExpand(){
-            setExpand(true)
-        }
         
+        // setting up the watchlist variables
+         const {watchList, setWatchList}= useContext(watchListContext)
+         const isInWatchlist = watchList?.some(item => item.id === movie?.id);
+        
+
+         const AddtoWatchList = (e) => {
+            
+            e.stopPropagation();        
+            if(isInWatchlist){
+                // Removing
+                setWatchList(prev => prev.filter(item => item.id !== movie.id))
+            }else{
+                setWatchList(prev => [...prev , movie])
+            }
+                        
+         }
+
     return(
         <>
 
@@ -118,12 +134,18 @@ function MoviePage(){
                 
             </div>
 
-            <div className="mt-3 w-full h-full text-white flex gap-4 ">
-                <button className=" cursor-pointer p-1.5 flex flex-col items-center  ">
-                    <AddIcon fontSize="medium" />
-                    <p className="text-sm text-netflix-light-gray">watchlist</p>
-                </button>
-                <button  className="p-1.5 cursor-pointer flex flex-col items-center ">
+            <div className="mt-3 pl-2 w-full h-full text-white flex gap-3 ">
+                
+                    <button className=" w-16 cursor-pointer p-1.5 flex flex-col items-center"
+                        onClick={AddtoWatchList}
+                    >
+                          {isInWatchlist ? <CheckIcon fontSize="medium"/> : <AddIcon fontSize="medium"/>}
+                        <p className="text-sm text-netflix-light-gray wrap-break-word">{isInWatchlist ? "Added": "watchlist"}</p>
+                         
+                    </button>
+                      
+               
+                <button  className="w-16 p-1.5  cursor-pointer flex flex-col items-center ">
                  <FavoriteBorderOutlinedIcon fontSize="medium"  />
                  <p className="text-sm text-netflix-light-gray">Rate</p>
                 </button>   
@@ -185,7 +207,20 @@ function MoviePage(){
 
                 <div className="flex gap-4">
                      <button className=" w-[60%] rounded-md p-3 mt-5 bg-white text-xl cursor-pointer transition transform hover:scale-102 duration-200 ">Watch Now</button>
-                    <button className=" w-[10%] rounded-md p-3 mt-5 bg-white cursor-pointer transition transform hover:scale-102 duration-200"><AddIcon fontSize="large" /></button>
+
+                   <div className="relative group inline-block"> 
+                    <button className=" w-full rounded-md p-3 mt-5 bg-white cursor-pointer transition transform hover:scale-102 duration-200"
+                    onClick={AddtoWatchList}
+                    >
+                      {isInWatchlist ? <CheckIcon fontSize="large"/> : <AddIcon fontSize="large"/>}
+                    </button>
+
+                         <span className="absolute bottom-12 left-1/2 -translate-x-1/2 
+                                        scale-0 group-hover:scale-100 transition-transform
+                                        bg-black text-white text-xs px-2 py-1 rounded whitespace-nowrap">
+                            {isInWatchlist ? "Added to watchlist" : "Add to watchlist"}
+                        </span>
+                    </div> 
                 </div> 
             </div>
         </div>
