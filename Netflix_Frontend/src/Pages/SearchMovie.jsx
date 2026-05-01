@@ -8,15 +8,43 @@ import ClearIcon from '@mui/icons-material/Clear';
 function SearchMovie() {
   
   const apiKey = import.meta.env.VITE_TMDB_KEY;
-  // const [query, setQuery] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get("q") || "";
+
+  // debounce purpose
+  const [debouncedQuery, setDebouncedQuery] = useState("")
+  const [input, setInput] = useState(query);
+
+  useEffect(() => {
+      const timer = setTimeout(() => {   // after 500sec
+        setDebouncedQuery(input)
+      }, 500);
+
+     return () => clearTimeout(timer);
+
+  }, [input])
+
+  // “Whenever the debounced search text changes, update the URL”
+  useEffect(() => {
+    const cleanQuery = debouncedQuery.trim();
+    const currentQuery = searchParams.get("q") || "";
+
+    if (cleanQuery !== currentQuery) {
+      if (cleanQuery) {
+        setSearchParams({ q: cleanQuery }, { replace: true });
+      } else {
+        setSearchParams({}, { replace: true });
+      }
+    }
+  }, [debouncedQuery]);
+
 
   const [movies, setMovies] = useState([]);
   const [topResults, setTopResults] = useState([]);
   const [moreResults, setMoreResults] = useState([]);
    useEffect(() => {
-      if (!query.trim()) {
+
+      if (!debouncedQuery.trim()) {
         setMovies([]);
         setTopResults([]);
         setMoreResults([]);
@@ -25,7 +53,7 @@ function SearchMovie() {
 
      const fetching = async () => {
       try{
-          const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${query}`)
+          const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${debouncedQuery}`)
 
           if(!res.ok){
             throw new Error('Failed to Fetch')
@@ -38,7 +66,7 @@ function SearchMovie() {
           );
 
         // movies with best match for Top Results
-           const q = query.toLowerCase();   
+           const q = debouncedQuery.toLowerCase();   
 
           const bestMatch =
             filteredMovies.find((m) => m.title.toLowerCase() === q) ||
@@ -66,7 +94,7 @@ function SearchMovie() {
      }
 
      fetching()
-   }, [query]);
+   }, [debouncedQuery]);
 
   return (
     <>
@@ -91,28 +119,28 @@ function SearchMovie() {
                     outline-none 
                     border border-gray-600 
                     transition-all duration-200"
-          value={query}
+          value={input}
           onChange={(e) => {
-          setSearchParams({ q: e.target.value },{ replace: true });
+         setInput(e.target.value)
         }}
         />
 
          {/* Clear Button */}
-          {query && (
+          {debouncedQuery && (
             <ClearIcon
               fontSize="large"
               className="absolute right-5 md:right-3 top-1/2 -translate-y-1/2 
                         text-gray-400 cursor-pointer hover:text-white transition"
-              onClick={() => setSearchParams({}, { replace: true })}
+              onClick={() => setInput("")}
             />
           )}
       </div>
 
   
-       {!query && <Trending />}
+       {!debouncedQuery && <Trending />}
    </div>
 
-    {query && <Results topResults={topResults} moreResults={moreResults} />}
+    {debouncedQuery && <Results topResults={topResults} moreResults={moreResults} />}
     </>
   );
 
