@@ -21,46 +21,7 @@ function TopResults({topResults}) {
   }
 
   return (
-    // <div className="w-full flex justify-center">
-    //   <div className="w-full md:w-[80%] p-4 ">
-    //     <h1 className="text-2xl font-semibold text-white pt-10 ">TOP RESULT</h1>
-
-    //     {topResults.length > 0 && (
-    //       <div className="flex items-center w-[70%]  gap-8 text-white rounded-xl p-4 ">
-            
-    //         {/* Left — Movie Image */}
-    //         <div className="w-[400px] shrink-0">
-    //           <Cards id={topResults[0].id} movie={topResults[0]} variant="landscape" />
-    //         </div>
-
-    //         {/* Right — Movie Details */}
-    //         <div className="flex flex-col gap-7 w-full ">
-    //           <div className="flex flex-col gap-3">
-    //           <h2 className="text-white text-4xl font-bold">{topResults[0].title}</h2>
-              
-    //           <div className="flex items-center gap-4  text-white text-sm">
-    //             <span>{topResults[0].release_date?.split("-")[0]}</span>
-    //             <span>•</span>
-    //             {runtime && 
-    //             <>
-    //             <span>{formatRuntime(runtime)}</span>
-    //             <span>•</span>
-    //             </>}
-    //             <span>{topResults[0].original_language?.toUpperCase()}</span>
-    //             <span>•</span>
-    //             <span>⭐ {topResults[0].vote_average?.toFixed(1)}</span>
-    //           </div>
-    //         </div>  
-    //           <button className=" flex items-center justify-center gap-2 bg-white text-black font-semibold px-8 py-4 rounded-[0.5rem] cursor-pointer hover:bg-gray-200 transition">
-    //            <PlayArrowIcon/> 
-    //            Watch Now
-    //           </button>
-    //         </div>
-
-    //       </div>
-    //     )}
-    //   </div>
-    // </div>
+    
     <div className="w-full flex justify-center">
   <div className="w-full md:w-[80%] p-4">
     <h1 className="text-2xl font-semibold text-white pt-10">TOP RESULT</h1>
