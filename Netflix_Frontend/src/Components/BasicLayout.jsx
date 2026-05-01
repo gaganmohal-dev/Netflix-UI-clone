@@ -8,13 +8,15 @@ function BasicLayout(){
      const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     return(
         <>
-        <header>
-            <Navbar setIsSidebarOpen={setIsSidebarOpen} isSidebarOpen = {isSidebarOpen} />
-        </header>
+         <div className="min-h-screen flex flex-col">
+            <header>    
+                <Navbar setIsSidebarOpen={setIsSidebarOpen} isSidebarOpen = {isSidebarOpen} />
+            </header>
             
-        <section>
-         <Outlet />
-        </section>
+            <main className="grow">
+                <Outlet />
+            </main>
+
 
         {/* Sidebar */}
            {isSidebarOpen && (
@@ -28,10 +30,11 @@ function BasicLayout(){
             />
 
              
-        {/*Footer */}
-        <footer>
-         <Footer />
-        </footer>
+                {/*Footer */}
+                <footer >
+                <Footer />
+                </footer>
+       </div>
         </>
     )
 }

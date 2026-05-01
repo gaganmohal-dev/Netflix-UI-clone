@@ -1,16 +1,15 @@
 import {Home, Tv, Film, Bell, Bookmark,Settings,LogOut, Gift } from "lucide-react";
+import { Link } from "react-router-dom";
 
 function SideBar({isSidebarOpen}){
     const MainMenu = [
-        {name: "Home", icon: Home},
-        {name: "Series", icon: Tv},
-        {name: "Movies", icon: Film},
+        {name: "Home", icon: Home, path: '/'},
+        {name: "Movies", icon: Film, path: '/movies'},
         {name: "Notifications", icon: Bell },
-        {name: "My List", icon: Bookmark },
+        {name: "My List", icon: Bookmark , path: '/my-list' },
         {name: "Gifts", icon: Gift },
     ]
     const BottomMenu = [
-        {name: "Settings", icon: Settings},
         {name: "Logout", icon: LogOut},
     ];
 
@@ -32,12 +31,21 @@ function SideBar({isSidebarOpen}){
                          const Icon = item.icon
                          
                          return(
-                            <>
-                                <div key={index}  className="flex  hover:bg-gray-300 cursor-pointer p-6 gap-5 ">
-                                    <Icon size={25}></Icon>
-                                    <span className="text-xl">{item.name}</span>
+                          
+                                <div key={index} className="hover:bg-gray-300 p-6">
+                                    {item.path ? (
+                                        <Link to={item.path} className="flex gap-5 items-center">
+                                        <Icon size={25} />
+                                        <span className="text-xl">{item.name}</span>
+                                        </Link>
+                                    ) : (
+                                        <div className="flex gap-5 items-center cursor-pointer">
+                                        <Icon size={25} />
+                                        <span className="text-xl">{item.name}</span>
+                                        </div>
+                                    )}
                                 </div>
-                            </>
+                            
                          )
                     })}
                 </div>

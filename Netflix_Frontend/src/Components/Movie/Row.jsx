@@ -8,7 +8,7 @@ import Rows from "../../Data/RowsData.js"
 function Row({name, movies}){
     const [showLeftBtn, setLeftBtn] = useState(false);
     const [showRightBtn, setRightBtn] = useState(false);
-    const rowRef = useRef(null);
+    const rowRef = useRef(null);    
     useEffect(() => {
          let row = rowRef.current
         
@@ -43,7 +43,7 @@ function Row({name, movies}){
     return(
         <>
           
-                <div  className="py-4 ">
+                <div  className="px-2 py-4 ">
                     {/* Mobile First Layout */}
                     {/* Row 1 */}
 
@@ -52,9 +52,9 @@ function Row({name, movies}){
                     </div>
 
                     <div className="relative group">
-                        <div ref={rowRef}  className=" text-white  scrollbar-hide overflow-y-hidden overflow-x-auto  h-[22vh]  md:h-[37vh] flex gap-4  ">
+                        <div ref={rowRef}  className=" text-white  scrollbar-hide overflow-y-hidden overflow-x-auto  h-[22vh]  md:h-[37vh] flex gap-2 ">
                            {movies.map((movie) => ( 
-                                <Cards key={movie.id} movie={movie} />
+                                <Cards key={movie.id} movie={movie} className="min-w-[120px] h-[271px] w-35 md:w-45.5"/>
                             ))}
                         </div>
                         

@@ -90,7 +90,7 @@ function MovieBanner(){
                 {Movies.map((movie,index) => (
                     
                     <div 
-                    className={`hidden md:block absolute inset-0  bg-no-repeat bg-cover  transition-opacity duration-1000 ease-in-out    ${index === currentIndex ? "opacity-100 z-10" : "opacity-0 z-0"}`}
+                    className={`hidden md:block absolute inset-0  bg-no-repeat bg-cover  transition-opacity duration-1000 ease-in-out ${index === currentIndex ? "opacity-100 z-10" : "opacity-0 z-0"}`}
                     key={movie.id} 
                     style={{
                         backgroundImage : 
@@ -99,7 +99,7 @@ function MovieBanner(){
                             )`}}
                     >
                         <div className="absolute inset-0 bg-linear-to-r 
-                            from-black 
+                            from-black
                             via-black/40 
                             to-transparent" />
                        <div className="absolute inset-0 
