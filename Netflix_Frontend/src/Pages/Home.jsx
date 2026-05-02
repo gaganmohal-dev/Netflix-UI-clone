@@ -6,36 +6,12 @@ function HomePage(){
 
     const apiKey = import.meta.env.VITE_TMDB_KEY;
     const [movies,setMovies] = useState({})
+
+    // For Optimizing loading (Lazy loading untill not scrolled!)
     const [visibleCount, setVisibleCount] = useState(3);
     const visibleCategories = movieCategories.slice(0, visibleCount);
     const [moviesByCategory, setMoviesByCategory] = useState({});
-    // useEffect(() => {
-    //     const  fetchData = async () => {
-    //         try{
-    //             const  responses = await Promise.all(
-    //                 movieCategories.map(category => 
-    //                 fetch(`https://api.themoviedb.org/3${category.endpoint}${category.endpoint.includes("?")? "&" : "?"}api_key=${apiKey}`),
-    //             ))
-
-    //             const data = await Promise.all(
-    //                 responses.map(res => res.json())
-    //             )
-               
-    //             const finalData = {} //{key:value}
-    //             data.forEach((item,index) => {
-    //                 const key = movieCategories[index].key
-    //                 finalData[key] = item.results
-    //             })
-                
-    //             setMovies(finalData);
-    //         }catch(error){
-    //             console.error(error)
-    //         }
-        
-    //     }
-         
-    //      fetchData()
-    //  }, [movieCategories])
+    
     useEffect(() => {
         const loadRows = async () => {
             const results = await Promise.all(
@@ -92,16 +68,7 @@ const loaderRef = useRef();
        
         {/* Rows */}
         <section>
-            {/* { 
-                movieCategories.map((category )=> (
-                  
-                        <Row key={category.key}  name={category.name} movies={movies[category.key] || []}/>
-                        
-                   
-                )
-                )
-            } */}
-
+         
              <div>
                 {visibleCategories.map(category => (
                 <Row
@@ -118,15 +85,6 @@ const loaderRef = useRef();
             </div>
         </section>
             
-        
-
-       
-
-             
-               
-           
-               
-
         </>
     )
 }
