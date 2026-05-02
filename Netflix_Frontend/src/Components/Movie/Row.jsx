@@ -43,7 +43,7 @@ function Row({name, movies}){
     return(
         <>
           
-                <div  className="px-2 py-4 ">
+                <div  className=" py-4 ">
                     {/* Mobile First Layout */}
                     {/* Row 1 */}
 
