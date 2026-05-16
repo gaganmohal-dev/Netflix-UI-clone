@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { Search } from "lucide-react"; // or any icon library
+import { CloudCog, Search } from "lucide-react"; // or any icon library
 import { useSearchParams } from "react-router-dom";
 import Cards from "../Components/Movie/Cards";
 import Trending from "../Components/SearchMovies/Trending";
 import Results from "../Components/SearchMovies/Results";
 import ClearIcon from '@mui/icons-material/Clear';
+import SpinningLoader from "../Loaders/SpinningLoader";
 function SearchMovie() {
   
   const apiKey = import.meta.env.VITE_TMDB_KEY;
@@ -14,6 +15,10 @@ function SearchMovie() {
   // debounce purpose
   const [debouncedQuery, setDebouncedQuery] = useState("")
   const [input, setInput] = useState(query);
+
+  // loading state
+
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
       const timer = setTimeout(() => {   // after 500sec
@@ -52,6 +57,8 @@ function SearchMovie() {
       } 
 
      const fetching = async () => {
+
+      setLoading(true)
       try{
           const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${debouncedQuery}`)
 
@@ -60,9 +67,10 @@ function SearchMovie() {
           }
 
           const data = await res.json()
+          console.log(data);
           
           const filteredMovies = data.results.filter(
-            movie => movie.backdrop_path || movie.poster_path
+            movie => movie.backdrop_path 
           );
 
         // movies with best match for Top Results
@@ -91,13 +99,19 @@ function SearchMovie() {
       }catch(err){
         console.error(err);
       }
+
+      setLoading(false)
      }
 
      fetching()
    }, [debouncedQuery]);
 
+
+
   return (
     <>
+    {/* {loading && SpinningLoader} */}
+    
     <div className="w-full flex flex-col md:items-center  pt-6">
       <div className=" relative  flex justify-center w-full md:w-[80%] max-w-8xl ">
         
@@ -140,7 +154,7 @@ function SearchMovie() {
        {!debouncedQuery && <Trending />}
    </div>
 
-    {debouncedQuery && <Results topResults={topResults} moreResults={moreResults} />}
+    {debouncedQuery && <Results topResults={topResults} moreResults={moreResults} loading={loading} query={query} />}
     </>
   );
 

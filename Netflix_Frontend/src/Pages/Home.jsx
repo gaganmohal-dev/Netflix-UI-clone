@@ -6,7 +6,7 @@ function HomePage(){
 
     const apiKey = import.meta.env.VITE_TMDB_KEY;
     const [movies,setMovies] = useState({})
-
+    const [loading,setLoading] = useState(true)
     // For Optimizing loading (Lazy loading untill not scrolled!)
     const [visibleCount, setVisibleCount] = useState(3);
     const visibleCategories = movieCategories.slice(0, visibleCount);
@@ -14,12 +14,14 @@ function HomePage(){
     
     useEffect(() => {
         const loadRows = async () => {
-            const results = await Promise.all(
-            visibleCategories.map(cat =>
-                fetch(`https://api.themoviedb.org/3${cat.endpoint}${
-                cat.endpoint.includes("?") ? "&" : "?"
-                }api_key=${apiKey}`)
-            )
+           const startTime = Date.now();
+             await new Promise(resolve => setTimeout(resolve, 1000));
+                const results = await Promise.all(
+                visibleCategories.map(cat =>
+                    fetch(`https://api.themoviedb.org/3${cat.endpoint}${
+                    cat.endpoint.includes("?") ? "&" : "?"
+                    }api_key=${apiKey}`)
+                )
             );
 
         const data = await Promise.all(results.map(res => res.json()));
@@ -50,7 +52,7 @@ const loaderRef = useRef();
                 : next;
             });
             }
-    });
+    }, {threshold:1});
 
         if (loaderRef.current) {
             observer.observe(loaderRef.current);
@@ -78,10 +80,8 @@ const loaderRef = useRef();
                 />
                 ))}
 
-                {/* 👇 Trigger point */}
-                <div ref={loaderRef} style={{ height: "50px" }}>
-                Loading more rows...
-                </div>
+               
+                <div ref={loaderRef} style={{ height: "50px" }}></div>
             </div>
         </section>
             

@@ -7,22 +7,57 @@ import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
 import Row from "../Components/Movie/Row";
 import { watchListContext } from "../Contexts/watchListContext";
 import CheckIcon from '@mui/icons-material/Check';
+import SpinningLoader from "../Loaders/SpinningLoader";
+
 function MoviePage(){
     const apiKey = import.meta.env.VITE_TMDB_KEY;
     const [movie,setMovie] = useState(null)
     const [recommendedMovies, setRecommendedMovies] = useState([])
     const { id } = useParams()
-   
+    const [loading , setLoading] = useState(true)
+    // For LAZY LOADING
+    const [hiResLoaded, setHiResLoaded] = useState(false)  
+    
     useEffect(() => {
-        try{
-            fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}`)
-            .then(response => response.json())
-            .then(data => setMovie(data))
-            
-        }catch(err){
+        setLoading(true)
+        setHiResLoaded(false)
+    const fetchMovie = async () => {
+
+        const start = Date.now()
+
+        try {
+
+            const response = await fetch(
+                `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}`
+            )
+
+            const data = await response.json()
+
+            setMovie(data)
+
+        } catch (err) {
+
             console.log(err)
+
+        } finally {
+
+            const elapsed = Date.now() - start
+            const minimumTime = 500
+
+            if (elapsed < minimumTime) {
+
+                await new Promise((resolve) =>
+                    setTimeout(resolve, minimumTime - elapsed)
+                )
+            }
+
+            setLoading(false)
         }
-    }, [id])
+    }
+
+    fetchMovie()
+
+}, [id])
 
     useEffect(() => {
            try{
@@ -31,7 +66,7 @@ function MoviePage(){
            }catch(err){
                 console.log(err)
            } 
-    }, [])
+    }, [id])
             console.log(recommendedMovies)
    
             let releaseDate = movie?.release_date?.slice(0,4)
@@ -57,17 +92,37 @@ function MoviePage(){
                         
          }
 
+  
     return(
         <>
-
-            {movie && (
+            {
+            loading ? (
+                <SpinningLoader/>
+            ) : (
+            movie && (
                 <>
                 {console.log(movie)}
 
                 <div className=" hidden md:block relative  w-full h-screen text-white">
-                   <img src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}  alt="Poster" className="w-full h-full"/> 
-                  
-                  
+                   {/* <img src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}  alt="Poster" className="w-full h-full"/>  */}
+                  <img
+                        src={`https://image.tmdb.org/t/p/w300${movie.backdrop_path}`}
+                        alt="Poster"
+                        className={`absolute inset-0 w-full h-full object-cover transition-transform duration-[500ms] ease-out
+                        ${hiResLoaded ? 'scale-100' : 'scale-80'}
+                        `}
+                        style={{ filter: hiResLoaded ? 'blur(0px)' : 'blur(8px)' }}
+                    />
+
+                   {/* HIGH quality — fades in once loaded, on top */}
+                    <img
+                        src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
+                        alt="Poster"
+                        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[600ms] ease-in
+                        ${hiResLoaded ? 'opacity-100' : 'opacity-0'}
+                        `}
+                        onLoad={() => setHiResLoaded(true)}
+                    />
                    <div className="absolute inset-0 bg-linear-to-r 
                             from-black 
                             via-black/40 
@@ -86,8 +141,9 @@ function MoviePage(){
 
                
                 </>
-            )
+            ))
          }
+        
 
     {/* For Mobile Layout only coz the structure is gonna be different too */}
         {movie && 
@@ -154,11 +210,22 @@ function MoviePage(){
         }
 
     {/* for Md-lg screens */}
-    {movie &&
-        <div className="p-5 absolute top-[50%] translate-y-[-30%] hidden md:block w-[50%] h-[50%] " >
+
+        
+
+    {movie && 
+       <div
+            className={`p-5 absolute top-[50%] hidden md:block w-[50%] h-[50%]
+            transition-all duration-[500ms] ease-out    
+            ${
+                hiResLoaded
+                ? 'opacity-100 blur-0 translate-y-[-30%]'
+                : 'opacity-0 blur-xl translate-y-[-20%]'
+            }`}
+        >
 
            {movie && 
-            <div className="text-7xl w-full  text-white">
+            <div className="text-7xl  w-[140%]  line-clamp-2 text-white">
                 {movie.original_title}    
             </div>
            }     
@@ -180,13 +247,13 @@ function MoviePage(){
                 <span className="text-justify text-lg leading-none" onClick={() => {setExpand(!expanded)}}>
                     {expanded ? (
                         <>
-                        {movie.overview}   
+                        {movie?.overview}   
                         <span className="text-white cursor-pointer  ">Show Less</span>
                         </>
                     )
                          : ( 
                          <>
-                         {movie.overview.slice(0,200) + "..."} 
+                         {movie?.overview.slice(0,200) + "..."} 
                             <span className="text-white cursor-pointer">"Read More"</span>
                          </>
                         )}
@@ -224,15 +291,15 @@ function MoviePage(){
                 </div> 
             </div>
         </div>
-        
-    }            
+      }            
 
         <div className="w-full h-auto mt-3 md:-mt-5 ">
             <Row name={"More Like This"} movies={recommendedMovies}/>
         </div>
 
         </>
-    )
+    ) 
+
 }
 
 export default MoviePage

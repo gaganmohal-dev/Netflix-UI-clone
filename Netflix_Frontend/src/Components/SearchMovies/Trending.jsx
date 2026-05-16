@@ -1,13 +1,17 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import Cards from "../Movie/Cards";
+import SpinningLoader from "../../Loaders/SpinningLoader";
 function Trending() {
      const [movies, setMovies] = useState([]);
     const apiKey = import.meta.env.VITE_TMDB_KEY;
+    const [loading, setLoading] = useState(true)
+
     useEffect(() => {
       const fetching = async () => {
+        const startTime = Date.now();
           try{
-                const res = await fetch(
+            const res = await fetch(
                     `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}`);
                
                 if(!res.ok){
@@ -19,6 +23,19 @@ function Trending() {
 
             }catch (err) {
                 console.error(err);
+             }finally{
+                const elapsed = Date.now() - startTime;
+
+                const minimumTime = 500;
+
+                if (elapsed < minimumTime) {
+
+                    await new Promise((resolve) =>
+                    setTimeout(resolve, minimumTime - elapsed)
+                    );
+
+                }
+                setLoading(false)
              }
         }  
 
@@ -26,23 +43,24 @@ function Trending() {
     }, []);  
   return (
     <>
-        {/* Trending Movies grid */}
-           <div className="w-[80%] max-w-8xl mt-9 leading-none mx-auto">
+        {loading ? <SpinningLoader /> : 
+      
+        ( <div className="w-[80%] max-w-8xl mt-9 leading-none mx-auto">
 
-            {/* Heading */}
-            <h2 className="text-white text-2xl font-semibold leading-none ">
-                Trending in India
-            </h2>
+                <h2 className="text-white text-2xl font-semibold leading-none ">
+                    Trending in India
+                </h2>
 
-            {/* Grid */}
-         <div className="grid gap-3 gap-x-5 pt-2  text-white
-                grid-cols-[repeat(auto-fill,minmax(140px,1fr))]">
-                {movies.map((movie) => (
-                <Cards key={movie.id} id={movie.id} movie={movie}  />
-                ))}
-            </div>
+                
+                <div className="grid gap-3 gap-x-5 pt-2  text-white
+                        grid-cols-[repeat(auto-fill,minmax(140px,1fr))]">
+                        {movies.map((movie) => (
+                        <Cards key={movie.id} id={movie.id} movie={movie}  />
+                        ))}
+                </div>
 
-            </div>
+            </div>)
+        }
     </>
   );
 }
