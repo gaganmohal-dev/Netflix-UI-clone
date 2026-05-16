@@ -4,8 +4,9 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useState, useEffect, useRef } from "react";
 import Cards from "./Cards";
 import Rows from "../../Data/RowsData.js"
+import SkeletonCardLoader from "../../Loaders/SkelotonCardLoader.jsx";
 
-function Row({name, movies}){
+function Row({title, movies}){
     const [showLeftBtn, setLeftBtn] = useState(false);
     const [showRightBtn, setRightBtn] = useState(false);
     const rowRef = useRef(null);    
@@ -48,14 +49,26 @@ function Row({name, movies}){
                     {/* Row 1 */}
 
                     <div className="p-1 px-3">
-                        <span className=" text-[clamp(1.5rem,1.8vw,2.8rem)] bebas-neue-regular text-white leading-none">{name}</span>
+                        <span className=" text-[clamp(1.5rem,1.8vw,2.8rem)] bebas-neue-regular text-white leading-none">{title}</span>
                     </div>
 
                     <div className="relative group">
                         <div ref={rowRef}  className=" text-white  scrollbar-hide overflow-y-hidden overflow-x-auto  h-[22vh]  md:h-[37vh] flex gap-2 ">
-                           {movies.map((movie) => ( 
-                                <Cards key={movie.id} movie={movie} className="min-w-[120px] h-[271px] w-35 md:w-45.5"/>
-                            ))}
+                           {
+                                movies.length === 0
+                                ?
+                                Array(8).fill().map((_, index) => (
+                                   <SkeletonCardLoader/> 
+                                ))
+                                :
+                                movies.map((movie) => ( 
+                                    <Cards 
+                                        key={movie.id} 
+                                        movie={movie} 
+                                        className="min-w-[120px] h-[271px] w-35 md:w-45.5"
+                                    />
+                                ))
+                            }
                         </div>
                         
                 {/* layering for side */}
